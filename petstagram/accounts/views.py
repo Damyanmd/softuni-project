@@ -83,7 +83,7 @@ class ProfileDetailsView(LoginRequiredMixin, FormView):
 '''''
 @login_required
 def profile_details(request):
-    profile = Profile.objects.get(pk=request.user.id)
+    profile = Procfile.objects.get(pk=request.user.id)
     if request.method == 'POST':
         form = ProfileForm(
             request.POST,
