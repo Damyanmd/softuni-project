@@ -24,23 +24,7 @@ def login_user(request):
     }
 
     return render(request, 'registration/login.html', context)
-'''''
-def register_user(request):
-    if request.method == 'POST':
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('index')
-    else:
-        form = RegisterForm()
 
-    context = {
-        'form': form,
-    }
-
-    return render(request, 'accounts/register.html', context)
-'''''
 class RegisterView(CreateView):
     form_class = RegisterForm
     template_name = 'accounts/register.html'
@@ -80,28 +64,3 @@ class ProfileDetailsView(LoginRequiredMixin, FormView):
         context['profile'] = self.object
         return context
 
-'''''
-@login_required
-def profile_details(request):
-    profile = Procfile.objects.get(pk=request.user.id)
-    if request.method == 'POST':
-        form = ProfileForm(
-            request.POST,
-            request.FILES,
-            instance=profile)
-        if form.is_valid():
-            form.save()
-            return redirect('profile details')
-    else:
-        form = ProfileForm(instance=profile)
-
-    user_pets = Pet.objects.filter(user_id=request.user.id)
-
-    context = {
-        'form': form,
-        'pets': user_pets,
-        'profile': profile,
-    }
-
-    return render(request, 'accounts/user_profile.html', context)
-'''''

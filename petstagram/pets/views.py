@@ -34,18 +34,7 @@ class CommentPetView(LoginRequiredMixin, PostOnlyView):
 
     def form_invalid(self, form):
         pass
-'''''
-@login_required
-def comment_pet(request, pk):
-    pet = Pet.objects.get(pk=pk)
-    form = CommentForm(request.POST)
-    if form.is_valid():
-        comment = form.save(commit=False)
-        comment.user = request.user
-        comment.save()
 
-    return redirect('pet details', pet.id)
-'''''
 class PetDetailsView(DetailView):
     model = Pet
     template_name = 'pet_detail.html'
@@ -71,25 +60,6 @@ class PetDetailsView(DetailView):
 
         return context
 
-'''''
-def pet_details(request, pk):
-    pet = Pet.objects.get(pk=pk)
-    pet.likes_count = pet.like_set.count()
-
-    is_owner = pet.user == request.user
-
-    is_liked_by_user = pet.like_set.filter(user_id=request.user.id) \
-        .exists()
-
-    context = {
-        'pet': pet,
-        'comment_form': CommentForm(),
-        'comments': pet.comment_set.all(),
-        'is_owner': is_owner,
-        'is_liked': is_liked_by_user,
-    }
-    return render(request, 'pet_detail.html', context)
-'''''
 
 @login_required
 def like_pet(request, pk):
