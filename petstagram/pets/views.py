@@ -1,8 +1,11 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView
 
 from petstagram.common.forms import CommentForm
+from petstagram.common.models import Comment
+from petstagram.core.views import PostOnlyView
 from petstagram.pets.forms import PetForm, EditPetForm
 from petstagram.pets.models import Pet, Like
 
@@ -14,6 +17,23 @@ def list_pets(request):
     }
     return render(request, 'pet_list.html', context)
 
+class CommentPetView(LoginRequiredMixin, PostOnlyView):
+    form_class = CommentForm
+
+    def form_valid(self, form):
+        pet = Pet.objects.get(pk=self.kwargs['pk'])
+        comment = Comment(
+            text=form.cleaned_data['text'],
+            pet=pet,
+            user=self.request.user,
+        )
+        comment.save()
+
+        return redirect('pet details', pet.id)
+
+    def form_invalid(self, form):
+        pass
+'''''
 @login_required
 def comment_pet(request, pk):
     pet = Pet.objects.get(pk=pk)
@@ -24,7 +44,7 @@ def comment_pet(request, pk):
         comment.save()
 
     return redirect('pet details', pet.id)
-
+'''''
 class PetDetailsView(DetailView):
     model = Pet
     template_name = 'pet_detail.html'

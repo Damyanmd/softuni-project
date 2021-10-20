@@ -4,7 +4,7 @@ class BootstrapFormMixin:
         self._init_bootstrap_fields()
 
     def _init_bootstrap_fields(self):
-        for (_, field)in self.fields.items():
+        for (_, field) in self.fields.items():
             if 'class' not in field.widget.attrs:
                 field.widget.attrs['class'] = ''
-            field.widget.attrs['class'] += 'form-control'
+            field.widget.attrs['class'] += ' form-control'
