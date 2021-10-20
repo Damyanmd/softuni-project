@@ -4,6 +4,7 @@ from django.db import models
 
 from petstagram.accounts.managers import PetstagramUserManagers
 
+from cloudinary import models as cloudinary_models
 
 class PetstagramUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
@@ -23,8 +24,8 @@ class PetstagramUser(AbstractBaseUser, PermissionsMixin):
     objects = PetstagramUserManagers()
 
 class Profile(models.Model):
-    profile_image = models.ImageField(
-        upload_to='profiles',
+    profile_image = cloudinary_models.CloudinaryField(
+        resource_type='image',
         blank=True,
     )
     user = models.OneToOneField(

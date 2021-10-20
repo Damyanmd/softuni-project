@@ -13,6 +13,8 @@ import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+import cloudinary as cloudinary
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -23,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-841v2y8w_%wtwjp=&$4sf+%hhm0)vppc1%q*j-p(1p_=@4n*-2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', False)
 
 ALLOWED_HOSTS = [
     '*',
@@ -83,10 +85,10 @@ WSGI_APPLICATION = 'petstagram.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd61lt3ftko51mn',
-        'USER': 'nfciemokryjfsm',
-        'PASSWORD': 'e0c5aadcd8e689ae9b12e1f1e7f4ac08febeec865a6abba8b84239a1fdf03129',
-        'HOST': 'ec2-34-250-19-18.eu-west-1.compute.amazonaws.com',
+        'NAME': os.environ.get('DATABASE_NAME'),
+        'USER': os.environ.get('DATABASE_USER'),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
+        'HOST': os.environ.get('DATABASE_HOST'),
         'PORT': '5432',
     }
 }
@@ -153,3 +155,10 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media_files'
 
 AUTH_USER_MODEL = 'accounts.PetstagramUser'
+
+cloudinary.config(
+    cloud_name='doxapoxiu',
+    api_key="884996382194528",
+    api_secret="9Mk4zYu2N1g_qzi7PiltyUC1XbU",
+    secure=True
+)

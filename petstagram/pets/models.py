@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
+from cloudinary import models as cloudinary_models
+
 UserModel = get_user_model()
 
 class Pet(models.Model):
@@ -23,8 +25,8 @@ class Pet(models.Model):
     )
     age = models.PositiveIntegerField()
     description = models.TextField()
-    image = models.ImageField(
-        upload_to='pets',
+    image = cloudinary_models.CloudinaryField(
+        resource_type='image',
     )
 
     user = models.ForeignKey(
