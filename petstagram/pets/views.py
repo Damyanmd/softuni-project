@@ -1,7 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
-from django.views.generic import DetailView
+from django.urls import reverse_lazy
+from django.views.generic import DetailView, UpdateView
 
 from petstagram.common.forms import CommentForm
 from petstagram.common.models import Comment
@@ -122,22 +123,11 @@ def create_pet(request):
     }
     return render(request, 'pet_create.html', context)
 
-@login_required
-def edit_pet(request, pk):
-    pet = Pet.objects.get(pk=pk)
-    if request.method == 'POST':
-        form = EditPetForm(request.POST, request.FILES, instance=pet)
-        if form.is_valid():
-            form.save()
-            return redirect('list pets')
-    else:
-        form = EditPetForm(instance=pet)
-
-    context = {
-        'form':form,
-        'pet': pet,
-    }
-    return render(request, 'pet_edit.html', context)
+class EditPetView(LoginRequiredMixin, UpdateView):
+    model = Pet
+    template_name = 'pet_edit.html'
+    form_class = EditPetForm
+    success_url = reverse_lazy('list pets')
 
 @login_required
 def delete_pet(request, pk):
